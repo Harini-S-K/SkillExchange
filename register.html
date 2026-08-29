@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign up — SkillExchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="register">
+
+<header class="site">
+  <div class="site-inner">
+    <a href="index.html" class="logo"><span class="mark">⇄</span> SkillExchange</a>
+  </div>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="logo" style="justify-content:center;"><span class="mark">⇄</span></div>
+    <h1>Create your account</h1>
+    <div class="auth-sub">One profile, two lists — what you teach and what you want to learn.</div>
+
+    <div class="auth-error" id="authError"></div>
+
+    <form id="registerForm" novalidate>
+      <div class="field">
+        <label>Name</label>
+        <input type="text" id="name" required placeholder="e.g. Priya R.">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" required minlength="6" placeholder="At least 6 characters">
+      </div>
+      <div class="field">
+        <label>Contact (optional — shown to your matches)</label>
+        <input type="text" id="contact" placeholder="email, handle, etc.">
+      </div>
+      <button type="submit" class="btn btn-primary">Create account</button>
+    </form>
+
+    <div class="auth-switch">Already have an account? <a href="login.html">Log in</a></div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SkillExchange — Trade skills, not money</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="index">
+
+<header class="site">
+  <div class="site-inner">
+    <div class="logo"><span class="mark">⇄</span> SkillExchange</div>
+    <nav class="site-nav">
+      <a href="index.html" class="active">Home</a>
+    </nav>
+    <div class="who">
+      <a href="login.html" class="btn-mini" style="background:transparent;border:1px solid var(--line);color:var(--paper-dim);padding:6px 12px;border-radius:3px;">Log in</a>
+      <a href="register.html" id="heroCtaPrimary" class="btn-mini">Sign up</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">No money changes hands</div>
+      <h1 class="headline">Teach what you <em>know</em>.<br>Learn what you <em>don't</em>. At once.</h1>
+      <p class="sub">SkillExchange is a barter board for skills. Create an account, list what you can teach and what you're hoping to learn, and get matched with people whose lists complement yours.</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="register.html">Create your account</a>
+        <a class="btn btn-ghost" href="login.html">I already have one</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b>0</b><span>MONEY REQUIRED</span></div>
+        <div class="stat"><b>1:1</b><span>SKILL FOR SKILL</span></div>
+        <div class="stat"><b>∞</b><span>THINGS WORTH LEARNING</span></div>
+      </div>
+    </div>
+    <div class="ticket-stack">
+      <div class="float-ticket ft3">
+        <div class="t-top"><div class="t-cat">Teaching</div><div class="t-name">Bread baking</div><div class="t-for">Maya · Craft &amp; Trade</div></div>
+        <div class="t-perf"></div>
+        <div class="t-bottom"><span class="t-stub">№ 014</span><span class="t-go">OPEN</span></div>
+      </div>
+      <div class="float-ticket ft2">
+        <div class="t-top"><div class="t-cat">Learning</div><div class="t-name">Logo design</div><div class="t-for">Kenji · Creative</div></div>
+        <div class="t-perf"></div>
+        <div class="t-bottom"><span class="t-stub">№ 027</span><span class="t-go">OPEN</span></div>
+      </div>
+      <div class="float-ticket ft1">
+        <div class="t-top"><div class="t-cat">Teaching</div><div class="t-name">Excel &amp; macros</div><div class="t-for">Priya · Tech</div></div>
+        <div class="t-perf"></div>
+        <div class="t-bottom"><span class="t-stub">№ 031</span><span class="t-go">OPEN</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>How it works</h2>
+    </div>
+    <div class="grid">
+      <div class="ticket" style="padding-bottom:4px;">
+        <div class="ticket-head">
+          <div class="ticket-cat">Step 1</div>
+          <div class="ticket-name">Build your profile</div>
+        </div>
+        <div class="ticket-desc">List the skills you can teach and the skills you're hoping to learn — as many of each as you like.</div>
+      </div>
+      <div class="ticket" style="padding-bottom:4px;">
+        <div class="ticket-head">
+          <div class="ticket-cat">Step 2</div>
+          <div class="ticket-name">Browse or get matched</div>
+        </div>
+        <div class="ticket-desc">Explore what others are teaching and learning, or check your dashboard for automatic matches.</div>
+      </div>
+      <div class="ticket" style="padding-bottom:4px;">
+        <div class="ticket-head">
+          <div class="ticket-cat">Step 3</div>
+          <div class="ticket-name">Propose a trade</div>
+        </div>
+        <div class="ticket-desc">Send a message, they accept or decline, and you work out the details directly.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>SkillExchange — PHP + MySQL, with real accounts and sessions.</footer>
+
+<script src="js/auth.js"></script>
+</body>
+</html>

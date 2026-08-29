@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — SkillExchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="dashboard" data-require-auth="true">
+
+<header class="site">
+  <div class="site-inner">
+    <a href="index.html" class="logo"><span class="mark">⇄</span> SkillExchange</a>
+    <nav class="site-nav">
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="skills.html">Skills</a>
+      <a href="requests.html">Requests <span class="nav-badge" id="reqBadge" style="display:none;">0</span></a>
+    </nav>
+    <div class="who">
+      <span id="whoLabel">…</span>
+      <a href="#" id="logoutBtn" class="logout-link btn-mini">Log out</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Welcome back</h2>
+      <p>here's where things stand</p>
+    </div>
+
+    <div class="dash-stats">
+      <div class="dash-stat"><b id="statTeach">–</b><span>Skills you teach</span></div>
+      <div class="dash-stat"><b id="statLearn">–</b><span>Skills you want</span></div>
+      <div class="dash-stat"><b id="statPending">–</b><span>Pending proposals</span></div>
+      <div class="dash-stat"><b id="statMatches">–</b><span>Potential matches</span></div>
+    </div>
+
+    <div class="section-head">
+      <h2>Suggested matches</h2>
+      <p id="matchSub">comparing your lists against the board</p>
+    </div>
+    <div id="matchList"></div>
+  </div>
+</section>
+
+<footer>SkillExchange — PHP + MySQL, with real accounts and sessions.</footer>
+
+<script src="js/auth.js"></script>
+<script>
+(function(){
+  const $ = (sel) => document.querySelector(sel);
+  const escapeHtml = s => (s || "").replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const STOPWORDS = ["a","an","the","to","for","and","of","in","on","with","basic","basics","beginner","beginners","intro","introduction","lessons","lesson","skills","skill","learning","how","my"];
+
+  function normWords(s){
+    return (s||'').toLowerCase().replace(/[^a-z0-9\s]/g,' ').split(/\s+/).filter(w => w.length>2 && !STOPWORDS.includes(w));
+  }
+  function skillsMatch(nameA, catA, nameB, catB){
+    const wa = normWords(nameA), wb = normWords(nameB);
+    if(wa.filter(w => wb.includes(w)).length > 0) return true;
+    if(catA === catB){
+      const la = (nameA||'').toLowerCase(), lb = (nameB||'').toLowerCase();
+      if(la.length>3 && lb.includes(la)) return true;
+      if(lb.length>3 && la.includes(lb)) return true;
+    }
+    return false;
+  }
+
+  async function loadDashboard(){
+    const SE = window.SE;
+    try {
+      const [myTeach, myLearn, boardTeach, boardLearn, received] = await Promise.all([
+        SE.apiGet('get_skills.php?type=teach&mine=1'),
+        SE.apiGet('get_skills.php?type=learn&mine=1'),
+        SE.apiGet('get_skills.php?type=teach'),
+        SE.apiGet('get_skills.php?type=learn'),
+        SE.apiGet('get_requests.php?box=received'),
+      ]);
+
+      $('#statTeach').textContent = myTeach.length;
+      $('#statLearn').textContent = myLearn.length;
+      const pending = received.filter(r => r.status === 'pending');
+      $('#statPending').textContent = pending.length;
+      const badge = $('#reqBadge');
+      if(pending.length > 0){ badge.style.display = 'inline-block'; badge.textContent = pending.length; }
+
+      // Group board listings by owner
+      const byOwner = {};
+      boardTeach.forEach(s => {
+        byOwner[s.user_id] = byOwner[s.user_id] || { id: s.user_id, name: s.owner_name, contact: s.owner_contact, teach: [], learn: [] };
+        byOwner[s.user_id].teach.push(s);
+      });
+      boardLearn.forEach(s => {
+        byOwner[s.user_id] = byOwner[s.user_id] || { id: s.user_id, name: s.owner_name, contact: s.owner_contact, teach: [], learn: [] };
+        byOwner[s.user_id].learn.push(s);
+      });
+
+      const results = [];
+      Object.values(byOwner).forEach(other => {
+        const iCanTeachThem = [];
+        myTeach.forEach(mt => other.learn.forEach(tl => {
+          if(skillsMatch(mt.skill_name, mt.category, tl.skill_name, tl.category)) iCanTeachThem.push({mine: mt, theirs: tl});
+        }));
+        const theyCanTeachMe = [];
+        other.teach.forEach(tt => myLearn.forEach(ml => {
+          if(skillsMatch(tt.skill_name, tt.category, ml.skill_name, ml.category)) theyCanTeachMe.push({theirs: tt, mine: ml});
+        }));
+        if(iCanTeachThem.length || theyCanTeachMe.length){
+          results.push({ user: other, iCanTeachThem, theyCanTeachMe, mutual: iCanTeachThem.length>0 && theyCanTeachMe.length>0 });
+        }
+      });
+      results.sort((a,b) => (b.mutual - a.mutual) || ((b.iCanTeachThem.length+b.theyCanTeachMe.length) - (a.iCanTeachThem.length+a.theyCanTeachMe.length)));
+
+      $('#statMatches').textContent = results.length;
+      $('#matchSub').textContent = results.length + (results.length===1 ? ' match found' : ' matches found');
+
+      const el = $('#matchList');
+      if(!results.length){
+        el.innerHTML = `<div class="empty"><b>No matches yet</b>Add a few more skills to your profile, or check back as more people join the board. <a href="skills.html" style="color:var(--brass-bright);">Go to My Skills →</a></div>`;
+        return;
+      }
+      el.innerHTML = results.map(m => `
+        <div class="match-card ${m.mutual ? 'mutual' : ''}">
+          <div class="match-top">
+            <div class="match-name">${escapeHtml(m.user.name)}</div>
+            <div class="match-tag ${m.mutual ? 'mutual' : 'partial'}">${m.mutual ? 'Perfect swap' : 'One-way match'}</div>
+          </div>
+          ${m.iCanTeachThem.map(x => `<div class="match-row"><span class="arrow">→</span><div>You teach <b>${escapeHtml(x.mine.skill_name)}</b>, they want <b>${escapeHtml(x.theirs.skill_name)}</b></div></div>`).join('')}
+          ${m.theyCanTeachMe.map(x => `<div class="match-row"><span class="arrow">←</span><div>They teach <b>${escapeHtml(x.theirs.skill_name)}</b>, you want <b>${escapeHtml(x.mine.skill_name)}</b></div></div>`).join('')}
+        </div>
+      `).join('');
+    } catch(e) {
+      $('#matchList').innerHTML = `<div class="empty"><b>Could not load your dashboard</b>Check that the PHP server and MySQL database are running.</div>`;
+    }
+  }
+
+  document.addEventListener('se:authed', loadDashboard);
+})();
+</script>
+</body>
+</html>

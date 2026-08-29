@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — SkillExchange</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="login">
+
+<header class="site">
+  <div class="site-inner">
+    <a href="index.html" class="logo"><span class="mark">⇄</span> SkillExchange</a>
+  </div>
+</header>
+
+<div class="auth-wrap">
+  <div class="auth-card">
+    <div class="logo" style="justify-content:center;"><span class="mark">⇄</span></div>
+    <h1>Welcome back</h1>
+    <div class="auth-sub">Log in to see your matches and proposals.</div>
+
+    <div class="auth-error" id="authError"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="field">
+        <label>Email</label>
+        <input type="email" id="email" required placeholder="you@example.com">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input type="password" id="password" required placeholder="••••••••">
+      </div>
+      <button type="submit" class="btn btn-primary">Log in</button>
+    </form>
+
+    <div class="auth-switch">Don't have an account? <a href="register.html">Sign up</a></div>
+  </div>
+</div>
+
+<script src="js/auth.js"></script>
+</body>
+</html>
